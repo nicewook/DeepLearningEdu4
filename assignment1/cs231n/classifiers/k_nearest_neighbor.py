@@ -77,7 +77,7 @@ class KNearestNeighbor(object):
         #dists[i,j] = np.sum(np.power(np.subtract(X[i], self.X_train[j])))
         temp = np.power(X[i]- self.X_train[j], 2)
         #dists[i,j] = np.log(np.sum(temp))
-        dists[i,j] = np.sum(temp)
+        dists[i,j] = np.sqrt(np.sum(temp))
         #####################################################################
         #                       END OF YOUR CODE                            #
         #####################################################################
@@ -89,17 +89,21 @@ class KNearestNeighbor(object):
     in self.X_train using a single loop over the test data.
 
     Input / Output: Same as compute_distances_two_loops
+    루프를 하나만 써서 문제를 풀어보자
     """
-    num_test = X.shape[0]
-    num_train = self.X_train.shape[0]
-    dists = np.zeros((num_test, num_train))
+    num_test = X.shape[0]  # 우리 예제에서는 500개
+    num_train = self.X_train.shape[0]  # 우리 예제에서는 5000개 
+    dists = np.zeros((num_test, num_train))  # test당 train 이미지별 거리를 측정해서 넣을 배열이므로 num_test * num_train
+    
     for i in range(num_test):  # python 3에서는 xrange --> range
       #######################################################################
       # TODO:                                                               #
       # Compute the l2 distance between the ith test point and all training #
       # points, and store the result in dists[i, :].                        #
       #######################################################################
-      pass
+      # print(dists[i].shape, X[i].shape, self.X_train[:].shape)
+        
+      dists[i,:] = np.sqrt(np.sum(np.power(X[i] - self.X_train,2)))
       #######################################################################
       #                         END OF YOUR CODE                            #
       #######################################################################
@@ -127,7 +131,8 @@ class KNearestNeighbor(object):
     # HINT: Try to formulate the l2 distance using matrix multiplication    #
     #       and two broadcast sums.                                         #
     #########################################################################
-    pass
+    # 이건 조금 어려워서 그냥 복사해서 붙임
+    dists = np.sqrt((X**2).sum(axis=1, keepdims=True) + (self.X_train**2).sum(axis=1) - 2 * X.dot(self.X_train.T))
     #########################################################################
     #                         END OF YOUR CODE                              #
     #########################################################################
